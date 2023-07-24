@@ -1,0 +1,17 @@
+$ arm-none-eabi-nm.exe unit3_lab4_cortexM4.elf
+
+00000010 W _1_handler
+00000010 W _2_handler
+20000400 B _E_bss
+20000000 T _E_data
+00000194 T _E_text
+20000000 B _S_bss
+20000000 T _S_data
+00000010 T default_handler
+00000000 T g_p_fun_vectors
+000000cc T main
+0000001c T Reset_handler
+20000000 b Stack_top
+
+
+
