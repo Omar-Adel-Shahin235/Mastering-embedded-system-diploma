@@ -1,0 +1,264 @@
+
+Unit6_lesson4_Assignment.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000016e  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001c2  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001c2  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001f4  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000038  00000000  00000000  00000230  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000749  00000000  00000000  00000268  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000058a  00000000  00000000  000009b1  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000002ee  00000000  00000000  00000f3b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000a8  00000000  00000000  0000122c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000352  00000000  00000000  000012d4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000002b2  00000000  00000000  00001626  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000028  00000000  00000000  000018d8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 36 00 	jmp	0x6c	; 0x6c <__vector_1>
+   8:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__vector_2>
+   c:	0c 94 7e 00 	jmp	0xfc	; 0xfc <__vector_3>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 a2 00 	call	0x144	; 0x144 <main>
+  64:	0c 94 b5 00 	jmp	0x16a	; 0x16a <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <__vector_1>:
+#define MCUCR  *((volatile unsigned char*)Base+0x35)
+#define GICR  *((volatile unsigned char*)Base+0x3B)
+#define SREG  *((volatile unsigned char*)Base+0x3F)
+
+ISR (INT0_vect)
+{
+  6c:	1f 92       	push	r1
+  6e:	0f 92       	push	r0
+  70:	0f b6       	in	r0, 0x3f	; 63
+  72:	0f 92       	push	r0
+  74:	11 24       	eor	r1, r1
+  76:	2f 93       	push	r18
+  78:	8f 93       	push	r24
+  7a:	9f 93       	push	r25
+	PORTD |=(1<<7);
+  7c:	97 9a       	sbi	0x12, 7	; 18
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  7e:	2f e3       	ldi	r18, 0x3F	; 63
+  80:	8d e0       	ldi	r24, 0x0D	; 13
+  82:	93 e0       	ldi	r25, 0x03	; 3
+  84:	21 50       	subi	r18, 0x01	; 1
+  86:	80 40       	sbci	r24, 0x00	; 0
+  88:	90 40       	sbci	r25, 0x00	; 0
+  8a:	e1 f7       	brne	.-8      	; 0x84 <__vector_1+0x18>
+  8c:	00 c0       	rjmp	.+0      	; 0x8e <__vector_1+0x22>
+  8e:	00 00       	nop
+	_delay_ms(1000);
+	PORTD &=~(1<<7);
+  90:	97 98       	cbi	0x12, 7	; 18
+  92:	2f e3       	ldi	r18, 0x3F	; 63
+  94:	8d e0       	ldi	r24, 0x0D	; 13
+  96:	93 e0       	ldi	r25, 0x03	; 3
+  98:	21 50       	subi	r18, 0x01	; 1
+  9a:	80 40       	sbci	r24, 0x00	; 0
+  9c:	90 40       	sbci	r25, 0x00	; 0
+  9e:	e1 f7       	brne	.-8      	; 0x98 <__vector_1+0x2c>
+  a0:	00 c0       	rjmp	.+0      	; 0xa2 <__vector_1+0x36>
+  a2:	00 00       	nop
+	_delay_ms(1000);
+}
+  a4:	9f 91       	pop	r25
+  a6:	8f 91       	pop	r24
+  a8:	2f 91       	pop	r18
+  aa:	0f 90       	pop	r0
+  ac:	0f be       	out	0x3f, r0	; 63
+  ae:	0f 90       	pop	r0
+  b0:	1f 90       	pop	r1
+  b2:	18 95       	reti
+
+000000b4 <__vector_2>:
+
+ISR (INT1_vect)
+{
+  b4:	1f 92       	push	r1
+  b6:	0f 92       	push	r0
+  b8:	0f b6       	in	r0, 0x3f	; 63
+  ba:	0f 92       	push	r0
+  bc:	11 24       	eor	r1, r1
+  be:	2f 93       	push	r18
+  c0:	8f 93       	push	r24
+  c2:	9f 93       	push	r25
+	PORTD |=(1<<6);
+  c4:	96 9a       	sbi	0x12, 6	; 18
+  c6:	2f e3       	ldi	r18, 0x3F	; 63
+  c8:	8d e0       	ldi	r24, 0x0D	; 13
+  ca:	93 e0       	ldi	r25, 0x03	; 3
+  cc:	21 50       	subi	r18, 0x01	; 1
+  ce:	80 40       	sbci	r24, 0x00	; 0
+  d0:	90 40       	sbci	r25, 0x00	; 0
+  d2:	e1 f7       	brne	.-8      	; 0xcc <__vector_2+0x18>
+  d4:	00 c0       	rjmp	.+0      	; 0xd6 <__vector_2+0x22>
+  d6:	00 00       	nop
+	_delay_ms(1000);
+	PORTD &=~(1<<6);
+  d8:	96 98       	cbi	0x12, 6	; 18
+  da:	2f e3       	ldi	r18, 0x3F	; 63
+  dc:	8d e0       	ldi	r24, 0x0D	; 13
+  de:	93 e0       	ldi	r25, 0x03	; 3
+  e0:	21 50       	subi	r18, 0x01	; 1
+  e2:	80 40       	sbci	r24, 0x00	; 0
+  e4:	90 40       	sbci	r25, 0x00	; 0
+  e6:	e1 f7       	brne	.-8      	; 0xe0 <__vector_2+0x2c>
+  e8:	00 c0       	rjmp	.+0      	; 0xea <__vector_2+0x36>
+  ea:	00 00       	nop
+	_delay_ms(1000);
+}
+  ec:	9f 91       	pop	r25
+  ee:	8f 91       	pop	r24
+  f0:	2f 91       	pop	r18
+  f2:	0f 90       	pop	r0
+  f4:	0f be       	out	0x3f, r0	; 63
+  f6:	0f 90       	pop	r0
+  f8:	1f 90       	pop	r1
+  fa:	18 95       	reti
+
+000000fc <__vector_3>:
+
+ISR (INT2_vect)
+{
+  fc:	1f 92       	push	r1
+  fe:	0f 92       	push	r0
+ 100:	0f b6       	in	r0, 0x3f	; 63
+ 102:	0f 92       	push	r0
+ 104:	11 24       	eor	r1, r1
+ 106:	2f 93       	push	r18
+ 108:	8f 93       	push	r24
+ 10a:	9f 93       	push	r25
+	PORTD |=(1<<5);
+ 10c:	95 9a       	sbi	0x12, 5	; 18
+ 10e:	2f e3       	ldi	r18, 0x3F	; 63
+ 110:	8d e0       	ldi	r24, 0x0D	; 13
+ 112:	93 e0       	ldi	r25, 0x03	; 3
+ 114:	21 50       	subi	r18, 0x01	; 1
+ 116:	80 40       	sbci	r24, 0x00	; 0
+ 118:	90 40       	sbci	r25, 0x00	; 0
+ 11a:	e1 f7       	brne	.-8      	; 0x114 <__vector_3+0x18>
+ 11c:	00 c0       	rjmp	.+0      	; 0x11e <__vector_3+0x22>
+ 11e:	00 00       	nop
+	_delay_ms(1000);
+	PORTD &=~(1<<5);
+ 120:	95 98       	cbi	0x12, 5	; 18
+ 122:	2f e3       	ldi	r18, 0x3F	; 63
+ 124:	8d e0       	ldi	r24, 0x0D	; 13
+ 126:	93 e0       	ldi	r25, 0x03	; 3
+ 128:	21 50       	subi	r18, 0x01	; 1
+ 12a:	80 40       	sbci	r24, 0x00	; 0
+ 12c:	90 40       	sbci	r25, 0x00	; 0
+ 12e:	e1 f7       	brne	.-8      	; 0x128 <__vector_3+0x2c>
+ 130:	00 c0       	rjmp	.+0      	; 0x132 <__vector_3+0x36>
+ 132:	00 00       	nop
+	_delay_ms(1000);
+}
+ 134:	9f 91       	pop	r25
+ 136:	8f 91       	pop	r24
+ 138:	2f 91       	pop	r18
+ 13a:	0f 90       	pop	r0
+ 13c:	0f be       	out	0x3f, r0	; 63
+ 13e:	0f 90       	pop	r0
+ 140:	1f 90       	pop	r1
+ 142:	18 95       	reti
+
+00000144 <main>:
+
+int main(void)
+{
+	//set pin7 , pin6 , pin5 in PORTD as output
+	DDRD|=(1<<7) | (1<<6) | (1<<5);
+ 144:	81 b3       	in	r24, 0x11	; 17
+ 146:	80 6e       	ori	r24, 0xE0	; 224
+ 148:	81 bb       	out	0x11, r24	; 17
+	
+	//set pin2 , pin3 in PORTD as input
+	DDRD&=~(1<<2); DDRD&=~(1<<3);
+ 14a:	8a 98       	cbi	0x11, 2	; 17
+ 14c:	8b 98       	cbi	0x11, 3	; 17
+	
+	//set pin2 in PORTB as input
+	DDRB&=~(1<<2);
+ 14e:	ba 98       	cbi	0x17, 2	; 23
+	
+	//Enable global interrupt
+	SREG|=(1<<7);
+ 150:	8f b7       	in	r24, 0x3f	; 63
+ 152:	80 68       	ori	r24, 0x80	; 128
+ 154:	8f bf       	out	0x3f, r24	; 63
+	
+	//Enable external interrupt pins (INT0 , INT1 , INT2)
+	GICR|=(1<<7) | (1<<6) | (1<<5);
+ 156:	8b b7       	in	r24, 0x3b	; 59
+ 158:	80 6e       	ori	r24, 0xE0	; 224
+ 15a:	8b bf       	out	0x3b, r24	; 59
+	
+	//INT0 - any logical change
+	MCUCR|=(1<<0);
+ 15c:	85 b7       	in	r24, 0x35	; 53
+ 15e:	81 60       	ori	r24, 0x01	; 1
+ 160:	85 bf       	out	0x35, r24	; 53
+	
+	//INT1 - rising edge
+	MCUCR|=(1<<2) | (1<<3);
+ 162:	85 b7       	in	r24, 0x35	; 53
+ 164:	8c 60       	ori	r24, 0x0C	; 12
+ 166:	85 bf       	out	0x35, r24	; 53
+ 168:	ff cf       	rjmp	.-2      	; 0x168 <main+0x24>
+
+0000016a <_exit>:
+ 16a:	f8 94       	cli
+
+0000016c <__stop_program>:
+ 16c:	ff cf       	rjmp	.-2      	; 0x16c <__stop_program>
