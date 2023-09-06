@@ -1,0 +1,277 @@
+
+Unit7_lesson1_section.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000013a  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  0000018e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  0000018e  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001c0  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000020  00000000  00000000  000001fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000696  00000000  00000000  0000021c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000005a6  00000000  00000000  000008b2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000002e0  00000000  00000000  00000e58  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000034  00000000  00000000  00001138  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000337  00000000  00000000  0000116c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000001f1  00000000  00000000  000014a3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000010  00000000  00000000  00001694  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 9b 00 	jmp	0x136	; 0x136 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+#include "Utils.h"
+#include <util/delay.h>
+#define F_CPU 8000000UL
+
+int main(void)
+{
+  6c:	cf 93       	push	r28
+  6e:	df 93       	push	r29
+  70:	1f 92       	push	r1
+  72:	cd b7       	in	r28, 0x3d	; 61
+  74:	de b7       	in	r29, 0x3e	; 62
+	//set PORTC direction to output
+	DDRC = 0xFF;
+  76:	8f ef       	ldi	r24, 0xFF	; 255
+  78:	84 bb       	out	0x14, r24	; 20
+	
+	//set PORTB direction to output
+	DDRB = 0xFF;
+  7a:	87 bb       	out	0x17, r24	; 23
+	
+	//set PORTD pins 0,1 and 2 direction to input
+	DDRD &=~(0b111);
+  7c:	81 b3       	in	r24, 0x11	; 17
+  7e:	88 7f       	andi	r24, 0xF8	; 248
+  80:	81 bb       	out	0x11, r24	; 17
+	
+	//Variable definition
+	unsigned char i,j,count;
+	volatile unsigned char press=0;
+  82:	19 82       	std	Y+1, r1	; 0x01
+				PORTB = 0;
+				press =0;
+			}
+			else
+			{
+				SET_BIT(PORTB,press);
+  84:	e1 e0       	ldi	r30, 0x01	; 1
+  86:	f0 e0       	ldi	r31, 0x00	; 0
+	volatile unsigned char press=0;
+	   
+    while (1) 
+    {
+		//if button 0 in portD is pressed , then start the Seven-segment counter
+		if(READ_BIT(PIND,0) == 1)
+  88:	80 99       	sbic	0x10, 0	; 16
+  8a:	27 c0       	rjmp	.+78     	; 0xda <main+0x6e>
+  8c:	35 c0       	rjmp	.+106    	; 0xf8 <main+0x8c>
+				for(j=0;j<10;j++)
+				{
+					for(count=0 ; count<10 ; count++)
+					{
+						//Operate the left seven segment and stop the right one
+						PORTC = (0b1011) | (i<<4);
+  8e:	25 bb       	out	0x15, r18	; 21
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  90:	a3 ec       	ldi	r26, 0xC3	; 195
+  92:	b9 e0       	ldi	r27, 0x09	; 9
+  94:	11 97       	sbiw	r26, 0x01	; 1
+  96:	f1 f7       	brne	.-4      	; 0x94 <main+0x28>
+  98:	00 c0       	rjmp	.+0      	; 0x9a <main+0x2e>
+  9a:	00 00       	nop
+						_delay_ms(10);
+					
+					//Operate the right seven segment and stop the left one
+						PORTC = (0b0111) | (j<<4);
+  9c:	95 bb       	out	0x15, r25	; 21
+  9e:	a3 ec       	ldi	r26, 0xC3	; 195
+  a0:	b9 e0       	ldi	r27, 0x09	; 9
+  a2:	11 97       	sbiw	r26, 0x01	; 1
+  a4:	f1 f7       	brne	.-4      	; 0xa2 <main+0x36>
+  a6:	00 c0       	rjmp	.+0      	; 0xa8 <main+0x3c>
+  a8:	00 00       	nop
+  aa:	81 50       	subi	r24, 0x01	; 1
+			
+			for(i=0;i<10;i++)
+			{
+				for(j=0;j<10;j++)
+				{
+					for(count=0 ; count<10 ; count++)
+  ac:	81 f7       	brne	.-32     	; 0x8e <main+0x22>
+  ae:	4f 5f       	subi	r20, 0xFF	; 255
+  b0:	5f 4f       	sbci	r21, 0xFF	; 255
+		if(READ_BIT(PIND,0) == 1)
+		{
+			
+			for(i=0;i<10;i++)
+			{
+				for(j=0;j<10;j++)
+  b2:	4a 30       	cpi	r20, 0x0A	; 10
+  b4:	51 05       	cpc	r21, r1
+  b6:	59 f0       	breq	.+22     	; 0xce <main+0x62>
+						//Operate the left seven segment and stop the right one
+						PORTC = (0b1011) | (i<<4);
+						_delay_ms(10);
+					
+					//Operate the right seven segment and stop the left one
+						PORTC = (0b0111) | (j<<4);
+  b8:	ca 01       	movw	r24, r20
+  ba:	82 95       	swap	r24
+  bc:	92 95       	swap	r25
+  be:	90 7f       	andi	r25, 0xF0	; 240
+  c0:	98 27       	eor	r25, r24
+  c2:	80 7f       	andi	r24, 0xF0	; 240
+  c4:	98 27       	eor	r25, r24
+  c6:	98 2f       	mov	r25, r24
+  c8:	97 60       	ori	r25, 0x07	; 7
+  ca:	8a e0       	ldi	r24, 0x0A	; 10
+  cc:	e0 cf       	rjmp	.-64     	; 0x8e <main+0x22>
+  ce:	6f 5f       	subi	r22, 0xFF	; 255
+  d0:	7f 4f       	sbci	r23, 0xFF	; 255
+    {
+		//if button 0 in portD is pressed , then start the Seven-segment counter
+		if(READ_BIT(PIND,0) == 1)
+		{
+			
+			for(i=0;i<10;i++)
+  d2:	6a 30       	cpi	r22, 0x0A	; 10
+  d4:	71 05       	cpc	r23, r1
+  d6:	19 f4       	brne	.+6      	; 0xde <main+0x72>
+  d8:	0e c0       	rjmp	.+28     	; 0xf6 <main+0x8a>
+  da:	60 e0       	ldi	r22, 0x00	; 0
+  dc:	70 e0       	ldi	r23, 0x00	; 0
+				for(j=0;j<10;j++)
+				{
+					for(count=0 ; count<10 ; count++)
+					{
+						//Operate the left seven segment and stop the right one
+						PORTC = (0b1011) | (i<<4);
+  de:	cb 01       	movw	r24, r22
+  e0:	82 95       	swap	r24
+  e2:	92 95       	swap	r25
+  e4:	90 7f       	andi	r25, 0xF0	; 240
+  e6:	98 27       	eor	r25, r24
+  e8:	80 7f       	andi	r24, 0xF0	; 240
+  ea:	98 27       	eor	r25, r24
+  ec:	28 2f       	mov	r18, r24
+  ee:	2b 60       	ori	r18, 0x0B	; 11
+  f0:	40 e0       	ldi	r20, 0x00	; 0
+  f2:	50 e0       	ldi	r21, 0x00	; 0
+  f4:	e1 cf       	rjmp	.-62     	; 0xb8 <main+0x4c>
+						_delay_ms(10);
+					}
+				}	
+			}
+			//Turn off the right seven segment 
+			CLR_BIT(PORTC,2);
+  f6:	aa 98       	cbi	0x15, 2	; 21
+  f8:	83 ec       	ldi	r24, 0xC3	; 195
+  fa:	99 e0       	ldi	r25, 0x09	; 9
+  fc:	01 97       	sbiw	r24, 0x01	; 1
+  fe:	f1 f7       	brne	.-4      	; 0xfc <main+0x90>
+ 100:	00 c0       	rjmp	.+0      	; 0x102 <main+0x96>
+ 102:	00 00       	nop
+		}
+		
+		_delay_ms(10);
+		
+		//if button 1 in portD is pressed then turn on the specific LED  
+		if(READ_BIT(PIND,1) == 1)
+ 104:	81 9b       	sbis	0x10, 1	; 16
+ 106:	c0 cf       	rjmp	.-128    	; 0x88 <main+0x1c>
+		{
+			//if button is pressed 8 times , then reset all the LEDS
+			if(press == 8)
+ 108:	89 81       	ldd	r24, Y+1	; 0x01
+ 10a:	88 30       	cpi	r24, 0x08	; 8
+ 10c:	19 f4       	brne	.+6      	; 0x114 <main+0xa8>
+			{
+				PORTB = 0;
+ 10e:	18 ba       	out	0x18, r1	; 24
+				press =0;
+ 110:	19 82       	std	Y+1, r1	; 0x01
+ 112:	0e c0       	rjmp	.+28     	; 0x130 <main+0xc4>
+			}
+			else
+			{
+				SET_BIT(PORTB,press);
+ 114:	89 81       	ldd	r24, Y+1	; 0x01
+ 116:	28 b3       	in	r18, 0x18	; 24
+ 118:	df 01       	movw	r26, r30
+ 11a:	02 c0       	rjmp	.+4      	; 0x120 <main+0xb4>
+ 11c:	aa 0f       	add	r26, r26
+ 11e:	bb 1f       	adc	r27, r27
+ 120:	8a 95       	dec	r24
+ 122:	e2 f7       	brpl	.-8      	; 0x11c <main+0xb0>
+ 124:	cd 01       	movw	r24, r26
+ 126:	82 2b       	or	r24, r18
+ 128:	88 bb       	out	0x18, r24	; 24
+				press++;
+ 12a:	89 81       	ldd	r24, Y+1	; 0x01
+ 12c:	8f 5f       	subi	r24, 0xFF	; 255
+ 12e:	89 83       	std	Y+1, r24	; 0x01
+			}
+			while(READ_BIT(PIND,1) == 1); //single pressing
+ 130:	81 99       	sbic	0x10, 1	; 16
+ 132:	fe cf       	rjmp	.-4      	; 0x130 <main+0xc4>
+ 134:	a9 cf       	rjmp	.-174    	; 0x88 <main+0x1c>
+
+00000136 <_exit>:
+ 136:	f8 94       	cli
+
+00000138 <__stop_program>:
+ 138:	ff cf       	rjmp	.-2      	; 0x138 <__stop_program>
