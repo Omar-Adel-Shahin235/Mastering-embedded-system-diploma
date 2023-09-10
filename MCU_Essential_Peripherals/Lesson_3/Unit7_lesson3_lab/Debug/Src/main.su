@@ -1,0 +1,4 @@
+main.c:42:6:clock_init	4	static
+main.c:48:6:Seven_segment_init	16	static
+main.c:88:6:Seven_segment_display	64	static
+main.c:105:5:main	16	static
