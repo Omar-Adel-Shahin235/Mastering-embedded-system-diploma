@@ -1,0 +1,3 @@
+I2C_EEPROM.c:10:6:EEPROM_Init	48	static
+I2C_EEPROM.c:25:6:EEPROM_Send_NBytes	288	static
+I2C_EEPROM.c:44:6:EEPROM_read_Bytes	32	static
